@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>A Bouquet for You 🌹</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(180deg, #ffe5ec, #ffb3c6, #ff8fab);
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    button {
+      padding: 16px 36px;
+      font-size: 18px;
+      border: none;
+      border-radius: 40px;
+      background: linear-gradient(135deg, #ff4d6d, #c9184a);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      transition: transform 0.3s ease, opacity 0.5s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    .bouquet {
+      display: none;
+      margin-top: 40px;
+      animation: fadeIn 2s ease forwards;
+    }
+
+    .rose {
+      position: relative;
+      width: 90px;
+      height: 90px;
+      margin: 18px;
+      display: inline-block;
+      animation: bloom 2.5s ease-in-out infinite alternate, glow 3s ease-in-out infinite;
+    }
+
+    .petal {
+      position: absolute;
+      width: 55px;
+      height: 80px;
+      background: radial-gradient(circle at 30% 30%, #ff8fab, #c9184a);
+      border-radius: 50%;
+      transform-origin: bottom center;
+    }
+
+    .petal:nth-child(1) { transform: rotate(0deg); left: 18px; }
+    .petal:nth-child(2) { transform: rotate(60deg); left: 18px; }
+    .petal:nth-child(3) { transform: rotate(120deg); left: 18px; }
+    .petal:nth-child(4) { transform: rotate(180deg); left: 18px; }
+    .petal:nth-child(5) { transform: rotate(240deg); left: 18px; }
+    .petal:nth-child(6) { transform: rotate(300deg); left: 18px; }
+
+    .center {
+      position: absolute;
+      width: 28px;
+      height: 28px;
+      background: radial-gradient(circle, #ffd6e0, #a4133c);
+      border-radius: 50%;
+      top: 31px;
+      left: 31px;
+      z-index: 2;
+    }
+
+    .message {
+      margin-top: 50px;
+      font-size: 26px;
+      color: #6a040f;
+      min-height: 50px;
+      opacity: 0;
+      transition: opacity 2s ease;
+    }
+
+    @keyframes bloom {
+      from { transform: scale(0.85); }
+      to { transform: scale(1.05); }
+    }
+
+    @keyframes glow {
+      0% { box-shadow: 0 0 15px rgba(255,77,109,0.4); }
+      100% { box-shadow: 0 0 35px rgba(255,77,109,0.8); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Falling petals */
+    .falling-petal {
+      position: absolute;
+      top: -50px;
+      width: 18px;
+      height: 18px;
+      background: radial-gradient(circle, #ff8fab, #c9184a);
+      border-radius: 50% 50% 50% 50%;
+      opacity: 0.8;
+      animation: fall linear infinite;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(110vh) rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <button id="openBtn">Click to Open 🌹</button>
+    <h4 style="color: #c9184a;">Happy Rose day 💖</h4>
+    <p style="color: #6a040f;">May your day be as beautiful and fragrant as these roses 🌹</p>
+
+    <div class="bouquet" id="bouquet">
+      <div class="rose">
+        <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+        <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+        <div class="center"></div>
+      </div>
+      <div class="rose">
+        <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+        <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+        <div class="center"></div>
+      </div>
+      <div class="rose">
+        <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+        <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+        <div class="center"></div>
+      </div>
+      <div class="rose">
+        <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+        <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+        <div class="center"></div>
+      </div>
+      <div class="rose">
+        <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+        <div class="petal"></div><div class="petal"></div><div class="petal"></div>
+        <div class="center"></div>
+      </div>
+
+      <p class="message" id="message"></p>
+    </div>
+  </div>
+
+  <script>
+    const messages = [
+      "For you — because every day with you feels like a celebration 🌹",
+      "You make ordinary moments bloom into something beautiful 💖",
+      "If smiles were flowers, you’d be a whole garden 🌸",
+      "Just a little reminder: you are loved, deeply and truly ✨",
+      "These roses are a small piece of how much you mean to me 💐",
+      "Forever yours 💞"
+    ];
+
+    const button = document.getElementById('openBtn');
+    const bouquet = document.getElementById('bouquet');
+    const msgEl = document.getElementById('message');
+
+    let started = false;
+
+    button.addEventListener('click', () => {
+      bouquet.style.display = 'block';
+      button.style.opacity = '0';
+      setTimeout(() => button.style.display = 'none', 500);
+
+      if (started) return;
+      started = true;
+
+      createPetals();
+
+      let i = 0;
+      msgEl.textContent = messages[i];
+      msgEl.style.opacity = 1;
+
+      setInterval(() => {
+        msgEl.style.opacity = 0;
+        setTimeout(() => {
+          i = (i + 1) % messages.length;
+          msgEl.textContent = messages[i];
+          msgEl.style.opacity = 1;
+        }, 1000);
+      }, 2000);
+    });
+
+    function createPetals() {
+      for (let i = 0; i < 25; i++) {
+        const petal = document.createElement('div');
+        petal.className = 'falling-petal';
+        petal.style.left = Math.random() * 100 + 'vw';
+        petal.style.animationDuration = 6 + Math.random() * 6 + 's';
+        document.body.appendChild(petal);
+      }
+    }
+  </script>
+</body>
+</html>
